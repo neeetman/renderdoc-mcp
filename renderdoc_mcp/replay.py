@@ -236,6 +236,15 @@ class Capture:
             out["depth"] = self.tex_info(dt) if dt != NULL else None
             vp = pipe.GetViewport(0)
             out["viewport"] = [vp.x, vp.y, vp.width, vp.height, vp.minDepth, vp.maxDepth]
+            ds = pipe.GetDepthTestState()
+            out["depth_state"] = {"test": ds.depthEnable, "write": ds.depthWrites,
+                                  "func": str(ds.depthFunction).split(".")[-1],
+                                  "bounds": [ds.minDepthBounds, ds.maxDepthBounds] if ds.depthBounds else None}
+            front, back = pipe.GetStencilFaces()
+            out["stencil"] = {face: {"func": str(s.function).split(".")[-1],
+                                     "pass": str(s.passOperation).split(".")[-1],
+                                     "write_mask": s.writeMask, "ref": s.reference}
+                              for face, s in (("front", front), ("back", back))}
         return out
 
     def _bound_cbuffers(self, pipe, st):

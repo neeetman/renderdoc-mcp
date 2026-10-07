@@ -156,7 +156,8 @@ async def list_actions(capture_id: str, first_eid: int, last_eid: int, only_work
 async def pipeline(capture_id: str, eid: int) -> dict:
     """Pipeline state at an action: shaders per stage, cbuffers (index, name, size, buffer),
     bound textures (SRVs: id, size, format - how to find a sprite atlas or a material's
-    textures), render targets, depth target and viewport."""
+    textures), render targets, depth target, depth state (test/write/func - e.g. a base pass
+    with write=false + Equal means depth came from a prepass), stencil and viewport."""
     return await _run(lambda: _get(capture_id).pipeline(eid))
 
 
