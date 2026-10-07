@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Passed as ForceImportBeforeCppTargets: imported after each project's own
+     ItemDefinitionGroups, so this overrides RuntimeLibrary for every project in the build.
+
+     Why: a renderdoc.dll built with a recent MSVC toolset and the dynamic CRT can't load into
+     a game that ships an older msvcp140/vcruntime140 next to its exe (the loader prefers the
+     exe's folder; a newer-toolset binary needs a runtime at least as new). Seen with Unreal
+     games bundling 14.24. With the static CRT renderdoc.dll has no VC-runtime dependency. -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <RuntimeLibrary Condition="'$(Configuration)'=='Release'">MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)'!='Release'">MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+  </ItemDefinitionGroup>
+</Project>
